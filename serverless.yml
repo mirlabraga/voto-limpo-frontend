@@ -73,7 +73,3 @@ resources:
             - ErrorCode: 404
               ResponseCode: 200
               ResponsePagePath: /index.html
-  Outputs:
-    NewOutput:
-      Description: "Description for the output"
-      Value: "Some output value"
