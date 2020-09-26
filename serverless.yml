@@ -1,0 +1,79 @@
+service:
+  name: voto-limpo-froentend
+
+custom:
+  s3Sync:
+    - bucketName: voto-limpo
+      localDir: build
+
+plugins:
+  - serverless-s3-sync
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  timeout: 19
+  region: eu-west-2
+
+package:
+  include:
+    - build/**
+
+resources:
+  Resources:
+    NewResource:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: voto-limpo
+        AccessControl: PublicRead
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: index.html
+    WebAppS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: NewResource
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+                - s3:GetObject
+              Resource: arn:aws:s3:::voto-limpo/*
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Comment: CloudFront Distribution
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            TargetOriginId: S3-voto-limpo
+            ForwardedValues:
+              QueryString: "false"
+            ViewerProtocolPolicy: allow-all
+            DefaultTTL: 30
+          IPV6Enabled: true
+          Origins:
+            - DomainName: voto-limpo.s3.amazonaws.com
+              Id: S3-voto-limpo
+              CustomOriginConfig:
+                OriginProtocolPolicy: https-only
+          Enabled: "true"
+          DefaultRootObject: index.html
+          CustomErrorResponses:
+            - ErrorCode: 404
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+  Outputs:
+    NewOutput:
+      Description: "Description for the output"
+      Value: "Some output value"
