@@ -11,11 +11,24 @@ import IconButton from '@material-ui/core/IconButton';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { styles } from './Content.css'
+import { styles } from './ListEvents.css'
+import FormEventDialog from './FormEventDialog';
 
-export interface ContentProps extends WithStyles<typeof styles> {}
+export interface ListEventsProps extends WithStyles<typeof styles> {}
 
-function Content(props: ContentProps) {
+function ListEvents(props: ListEventsProps) {
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value: string) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+
   const { classes } = props;
 
   return (
@@ -37,7 +50,7 @@ function Content(props: ContentProps) {
               />
             </Grid>
             <Grid item>
-              <Button variant="contained" color="primary" className={classes.addUser}>
+              <Button variant="contained" color="primary" className={classes.addUser} onClick={handleClickOpen}>
                 Criar reunião
               </Button>
               <Tooltip title="Reload">
@@ -54,8 +67,9 @@ function Content(props: ContentProps) {
           Nenhuma reunião criada para esse cadidato ainda.
         </Typography>
       </div>
+      <FormEventDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
     </Paper>
   );
 }
 
-export default withStyles(styles)(Content);
+export default withStyles(styles)(ListEvents);
