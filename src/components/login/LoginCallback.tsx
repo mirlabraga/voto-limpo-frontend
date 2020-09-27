@@ -1,7 +1,8 @@
 import React, { FC, useEffect } from "react";
-import { RouteComponentProps } from "react-router";
+import { Redirect, RouteComponentProps } from "react-router";
 
-const LoginCallback: FC<RouteComponentProps> = ({ location }) => {
+const LoginCallback: FC<RouteComponentProps> = ({ history, location }) => {
+
   useEffect(() => {
 
     const params = new URLSearchParams(location.search);
@@ -17,13 +18,12 @@ const LoginCallback: FC<RouteComponentProps> = ({ location }) => {
     }).then(response => {
       return response.json()
     }).then(data => {
-      console.log(data);
       window.localStorage.setItem("id_token", data.id_token);
     });
   });
-
-  return <p>
-  </p>;
+  return (
+    <Redirect to="/dashboard" />
+  );
 };
 
 export default LoginCallback;
