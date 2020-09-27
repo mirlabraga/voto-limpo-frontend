@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from "@material-ui/core";
+import Template from '../template/Template';
 
 function Presentation() {
   return (
@@ -18,7 +19,7 @@ function Presentation() {
 export default function Home() {
   return (
     <div>
-      <Presentation/>
+      <Template page = {<Presentation/>}/>
     </div>
   );
 }

@@ -3,11 +3,14 @@ import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import { useStyles } from './Template.css';
-import Home from '../home/Home'
 import Footer from './Footer';
 import ToolbarApp from './ToolbarApp';
 
-export default function Template() {
+interface TemplateProps {
+  page: object
+}
+
+export default function Template(props: TemplateProps) {
   const classes = useStyles();
 
   return (
@@ -17,7 +20,7 @@ export default function Template() {
         <ToolbarApp/>
       </AppBar>
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
-        <Home />
+        { props.page }
       </Container>
       <Container maxWidth="md" component="footer" className={classes.footer}>
         <Footer />
