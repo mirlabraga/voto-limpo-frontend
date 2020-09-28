@@ -4,6 +4,7 @@ import './App.css';
 import { Route, BrowserRouter as Router, Switch, useHistory } from 'react-router-dom'
 import Login from './components/login/Login';
 import Home from './components/home/Home';
+import JoinEvent from './components/join-event/JoinEvent';
 import LoginCallback from './components/login/LoginCallback';
 import Dashboard from './components/dashboard/Dashboard';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -37,6 +38,7 @@ function App() {
             <Route exact path="/login" component={Login}/>
             <Route exact path="/callback" component={LoginCallback}/>
             <Route exact path="/dashboard" component={Dashboard}/>
+            <Route exact path="/s/:supporterId/e/:eventId/join" component={JoinEvent}/>
           </Switch>
         </CheckPendingActions>
       </Router>

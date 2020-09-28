@@ -97,3 +97,54 @@ export const useCreateGoogleCalendar = (): [(event: Event | null) => void, boole
 
   return [setEvent, loading];
 }
+
+export interface JoinInfoData {
+    supporterId: string,
+    eventId: string,
+    name: string,
+    email: string,
+    phoneNumber: string
+}
+
+export interface MeetingUrl {
+    uri: string,
+    label?: string | null
+}
+
+export const useJoinEvent = (): [(joinInfo: JoinInfoData | null) => void, boolean, MeetingUrl | null] => {
+    const [joinInfo, setJoinInfo] = useState<JoinInfoData | null>();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [meetingData, setMeetingData] = useState<MeetingUrl | null>(null);
+    const createEvent = async() => {
+        if (!joinInfo) {
+            return;
+        }
+        setLoading(true);
+        const {name, email, phoneNumber} = joinInfo;
+        const url = `${process.env.REACT_APP_BASE_URL}/supporter/${joinInfo.supporterId}/events/${joinInfo.eventId}/join`;
+        const result = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({
+                name,
+                email,
+                phoneNumber
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors',
+        });
+        setLoading(false);
+        setJoinInfo(null);
+        if (result.ok) {
+            const data = await result.json();
+            setMeetingData(data as MeetingUrl);
+        }
+    }
+
+    useEffect(() => {
+        createEvent().catch(console.log);
+    }, [joinInfo])
+
+    return [setJoinInfo, loading, meetingData];
+}
