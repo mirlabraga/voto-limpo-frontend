@@ -6,7 +6,7 @@ function Presentation() {
   return (
     <div>
       <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-        Voto limpo
+        O dia do Voto
       </Typography>
       <Typography variant="h5" align="center" color="textSecondary" component="p">
         A melhor e mais eficiente forma de interagir com o seu eleitorado. Uma plataforma criada

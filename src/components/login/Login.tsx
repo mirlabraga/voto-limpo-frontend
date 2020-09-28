@@ -1,17 +1,33 @@
 import React from 'react';
 import Template from '../template/Template';
-import GoogleButton from 'react-google-button'
-import { useHistory } from 'react-router-dom';
+import GoogleButton from 'react-google-button';
+import * as crypto from 'crypto';
+import base64url from "base64url";
+import { v4 as uuid} from  "uuid";
 
 function GoogleSignin() {
-  const history = useHistory();
+
+  const sha256 = (buffer: string) => {
+    return crypto.createHash('sha256').update(buffer).digest();
+  }
+
+  const generateCodeChallenge = (codeVerifier: string) => {
+    return base64url.encode(sha256(codeVerifier));
+  }
+
   const signin = async () => {
-    window.location.href = `${process.env.REACT_APP_SIGNIN_URI}?
-    state=${process.env.REACT_APP_STATE}&
-    client_id=${process.env.REACT_APP_CLIENT_ID}&
-    redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&
-    response_type=${process.env.REACT_APP_RESPONSE_TYPE}&
-    code_challenge=${process.env.REACT_APP_CODE_CHALLEGE}`;
+
+    const codeVerifier = uuid();
+    window.localStorage.setItem("code_verifier", codeVerifier)
+
+    const params = new URLSearchParams();
+    params.append('state',process.env.REACT_APP_STATE || '');
+    params.append('client_id',process.env.REACT_APP_CLIENT_ID || '');
+    params.append('redirect_uri',process.env.REACT_APP_REDIRECT_URI || '');
+    params.append('response_type',process.env.REACT_APP_RESPONSE_TYPE || '');
+    params.append('code_challenge',generateCodeChallenge(codeVerifier) || '');
+
+    window.location.assign(`${process.env.REACT_APP_SIGNIN_URI}?${params.toString()}`);
   }
 
   return (
