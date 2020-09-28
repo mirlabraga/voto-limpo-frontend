@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { handleResponses } from "./login";
 
-
 interface CreateEventData {
     date: Date
 }

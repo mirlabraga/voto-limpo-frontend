@@ -14,7 +14,11 @@ import { useStylesTable } from './ListTableEvents.css';
 import ShareIcon from '@material-ui/icons/Share';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 
-export default function ListTableEvents() {
+interface ListTableProps {
+  profileScopes: string[]
+}
+
+export default function ListTableEvents(props: ListTableProps) {
   const classes = useStylesTable();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
