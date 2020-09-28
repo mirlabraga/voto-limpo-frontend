@@ -36,6 +36,36 @@ export const useEvents = (): Event[] => {
     return events;
 }
 
+export const useCreateEvent = (): [(event: Event | null) => void, boolean] => {
+    const [event, setEvent] = useState<Event | null>();
+    const [loading, setLoading] = useState<boolean>(false);
+    const history = useHistory();
+
+    const createEvent = async() => {
+        if (!event) {
+            return;
+        }
+        const url = `${process.env.REACT_APP_BASE_URL}/events`;
+        const result = await handleResponses(history, fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(event),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${window.localStorage.getItem("id_token")}`
+            },
+            mode: 'cors',
+        }));
+        setEvent(null);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        createEvent().catch(console.log);
+    }, [event])
+
+    return [setEvent, loading];
+}
+
 export const createEvent = async (event: CreateEventData): Promise<Event> => {
     const uri = `${process.env.REACT_APP_BASE_URL}/events`;
     const response = await fetch(uri, {
