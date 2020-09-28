@@ -68,9 +68,7 @@ function ListEvents(props: ListEventsProps) {
         {/* <Typography color="textSecondary" align="center">
           Nenhuma reunião criada para esse cadidato ainda.
         </Typography> */}
-        <Typography color="textSecondary" align="center">
-          <ListTableEvents profileScopes={profileScopes}/>
-        </Typography>
+        <ListTableEvents profileScopes={profileScopes}/>
       </div>
       <FormEventDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
     </Paper>
