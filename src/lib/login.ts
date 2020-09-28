@@ -1,6 +1,7 @@
 import { v4 as uuid} from  "uuid";
 import * as crypto from 'crypto';
 import base64url from "base64url";
+import { History } from 'history';
 
 const sha256 = (buffer: string) => {
 return crypto.createHash('sha256').update(buffer).digest();
@@ -45,4 +46,14 @@ export const getToken = async(code: string, state: string) => {
     });
     const data = await response.json();
     window.localStorage.setItem("id_token", data.id_token);
+}
+
+export const handleResponses = (history: History, request: Promise<Response>): Promise<Response> => {
+  return request.then(result => {
+    if (result.status == 403 || result.status == 401) {
+      history.push('/login');
+      throw new Error('unauthenticated user')
+    };
+    return result;
+  });
 }
