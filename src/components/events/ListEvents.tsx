@@ -13,7 +13,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { styles } from './ListEvents.css'
 import FormEventDialog from './FormEventDialog';
-import ListTableEvents from './ListTableEvents';
+import ListTableEvents from './ListTableEvents/ListTableEvents';
 
 export interface ListEventsProps extends WithStyles<typeof styles> {}
 
