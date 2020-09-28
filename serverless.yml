@@ -29,6 +29,7 @@ provider:
   runtime: nodejs12.x
   timeout: 19
   region: eu-west-2
+  stage: ${opt:stage, 'dev'}
 
 package:
   include:
