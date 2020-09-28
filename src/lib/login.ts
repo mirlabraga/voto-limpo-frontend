@@ -2,6 +2,7 @@ import { v4 as uuid} from  "uuid";
 import * as crypto from 'crypto';
 import base64url from "base64url";
 import { History } from 'history';
+import * as jwt from 'jsonwebtoken';
 
 const sha256 = (buffer: string) => {
 return crypto.createHash('sha256').update(buffer).digest();
@@ -25,6 +26,45 @@ export const generateLoginUrl = () => {
     params.append('code_challenge',generateCodeChallenge(codeVerifier));
     return `${process.env.REACT_APP_SIGNIN_URI}?${params.toString()}`;
 }
+
+export const getSupporter = async () => {
+  const claims = jwt.decode(window.localStorage.id_token);
+  if (typeof(claims) === 'string' || claims === null) {
+    throw new Error('invalid localStore.id_token');
+  }
+  return {
+    id: claims['sub'],
+    name: claims['name'],
+    email: claims['email'],
+  }
+}
+
+/**
+ * <code>
+ * getSupporter().then(supporter =>{
+ *   console.log('supporter', supporter);
+ *   console.log('add-scope redirect url', generateAddScopeUrl(supporter.id, "https://www.googleapis.com/auth/contacts.readonly"))
+ * })
+ * </code>
+ * @param supporterId 
+ * @param scope 
+ */
+export const generateAddScopeUrl = (supporterId: string, scope: string) => {
+  const codeVerifier = uuid();
+  const state = uuid();
+  window.localStorage.setItem("code_verifier", codeVerifier)
+  window.localStorage.setItem("state", state)
+
+  const params = new URLSearchParams();
+  params.append('state',state);
+  params.append('client_id',process.env.REACT_APP_CLIENT_ID || '');
+  params.append('redirect_uri',process.env.REACT_APP_REDIRECT_URI || '');
+  params.append('response_type','code');
+  params.append('scope', scope);
+  params.append('code_challenge',generateCodeChallenge(codeVerifier));
+  return `${process.env.REACT_APP_BASE_URL}/supporter/${supporterId}/add-scope?${params.toString()}`;
+}
+
 
 export const getToken = async(code: string, state: string) => {
     if (state !== window.localStorage.getItem('state')) {
