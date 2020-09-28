@@ -2,7 +2,7 @@ service:
   name: voto-limpo-froentend
 
 custom:
-  secrets: ${ssm:/aws/reference/secretsmanager/voto-limpo/dev~true}
+  secrets: ${ssm:/aws/reference/secretsmanager/voto-limpo/${self:provider.stage}~true}
   appDomain: ${self:provider.stage}.app.diadovoto.com
   bucketName: "diadovoto-front-${self:custom.appDomain}"
   s3Sync:
@@ -11,7 +11,7 @@ custom:
   scripts:
     hooks:
       'deploy:createDeploymentArtifacts': >
-        REACT_APP_SIGNIN_URI=${self:custom.secrets.SIGNIN_URI}
+        npm install && REACT_APP_SIGNIN_URI=${self:custom.secrets.SIGNIN_URI}
         REACT_APP_TOKEN_URI=${self:custom.secrets.TOKEN_URI}
         REACT_APP_CLIENT_ID=${self:custom.secrets.MAIN_CLIENT_ID}
         REACT_APP_SELF_URL=https://${self:custom.appDomain}
