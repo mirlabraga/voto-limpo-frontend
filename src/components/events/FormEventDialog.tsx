@@ -14,7 +14,6 @@ export interface FormEventDialogProps {
 export default function FormEventDialog(props: FormEventDialogProps) {
 
   const { onClose, selectedValue, open } = props;
-  const [error, setError] = React.useState<any | null>();
   const [date, setDate] = React.useState<Date | null | undefined> (
     new Date(),
   );
@@ -27,15 +26,11 @@ export default function FormEventDialog(props: FormEventDialogProps) {
     if (!date) {
       return;
     }
-    try {
-      const _eventCreated = await createEvent({
-        date
-      });
-      setDate(null);
-      handleClose();
-    } catch(e) {
-      setError(e);
-    }
+    const _eventCreated = await createEvent({
+      date
+    });
+    setDate(null);
+    handleClose();
   }
 
   return (
