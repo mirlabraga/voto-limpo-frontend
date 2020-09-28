@@ -6,7 +6,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { fetchEvents, Event } from '../../../lib/events';
+import { useEvents } from '../../../lib/events';
 import moment from 'moment';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Link, Table } from '@material-ui/core';
@@ -18,17 +18,9 @@ export default function ListTableEvents() {
   const classes = useStylesTable();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = React.useState<Event[]>([]);
+  const rows = useEvents();
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-  useEffect(() => {
-    fetchEvents()
-    .then(events => {
-      setRows(events);
-    });
-    console.log('use effect did not work');
-  }, [rowsPerPage])
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
