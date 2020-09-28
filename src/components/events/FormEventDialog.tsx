@@ -24,7 +24,7 @@ export default function FormEventDialog(props: FormEventDialogProps) {
 
   useEffect(() => {
     if (loadingCreateEvent) {
-      setDate(null);
+      setDate(new Date());
       handleClose();
     }
   }, [loadingCreateEvent]);
