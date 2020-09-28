@@ -3,6 +3,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DateAndTimePickers from '../common/DateAndTimePickers';
+import { createEvent } from '../../lib/events';
 
 export interface FormEventDialogProps {
   open: boolean;
@@ -13,6 +14,7 @@ export interface FormEventDialogProps {
 export default function FormEventDialog(props: FormEventDialogProps) {
 
   const { onClose, selectedValue, open } = props;
+  const [error, setError] = React.useState<any | null>();
   const [date, setDate] = React.useState<Date | null | undefined> (
     new Date(),
   );
@@ -21,19 +23,18 @@ export default function FormEventDialog(props: FormEventDialogProps) {
     onClose(selectedValue);
   };
 
-  const createEvent = async () => {
-    const response = await fetch(process.env.REACT_APP_CREATE_EVENT_URI || "https://localhost:3000/events", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${window.localStorage.getItem("id_token")}`
-        },
-        mode: 'cors',
-        body: JSON.stringify({date: date?.toISOString()})
-    });
-    if (response.ok) {
+  const handleCreateEvent = async () => {
+    if (!date) {
+      return;
+    }
+    try {
+      const _eventCreated = await createEvent({
+        date
+      });
       setDate(null);
       handleClose();
+    } catch(e) {
+      setError(e);
     }
   }
 
@@ -41,7 +42,7 @@ export default function FormEventDialog(props: FormEventDialogProps) {
     <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogTitle id="simple-dialog-title">Crie um novo encontro</DialogTitle>
       <DateAndTimePickers date={date} setDate={setDate}/>
-      <Button variant="contained" color="primary" onClick={createEvent}>
+      <Button variant="contained" color="primary" onClick={handleCreateEvent}>
         Salvar
       </Button>
     </Dialog>

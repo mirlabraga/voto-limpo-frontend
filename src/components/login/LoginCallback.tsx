@@ -6,6 +6,10 @@ const LoginCallback: FC<RouteComponentProps> = ({ history, location }) => {
   useEffect(() => {
 
     const params = new URLSearchParams(location.search);
+    if (params.get('state') != window.localStorage.getItem('state')) {
+      return history.push('/');
+    }
+
     params.append('code_verifier', window.localStorage.getItem("code_verifier") || "");
 
     fetch(process.env.REACT_APP_TOKEN_URI || "https://localhost:3000/token", {

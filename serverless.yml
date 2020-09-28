@@ -14,8 +14,8 @@ custom:
         REACT_APP_SIGNIN_URI=${self:custom.secrets.SIGNIN_URI}
         REACT_APP_TOKEN_URI=${self:custom.secrets.TOKEN_URI}
         REACT_APP_CLIENT_ID=${self:custom.secrets.MAIN_CLIENT_ID}
-        REACT_APP_REDIRECT_URI=http://${self:custom.appDomain}/callback
-        REACT_APP_BASE_URL=${self:custom.secrets.REACT_APP_BASE_URL}
+        REACT_APP_REDIRECT_URI=https://${self:custom.appDomain}/callback
+        REACT_APP_BASE_URL=${self:custom.secrets.BASE_URL}
         npm run build
 
 plugins:

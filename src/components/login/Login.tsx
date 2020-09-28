@@ -18,14 +18,16 @@ function GoogleSignin() {
   const signin = async () => {
 
     const codeVerifier = uuid();
+    const state = uuid();
     window.localStorage.setItem("code_verifier", codeVerifier)
+    window.localStorage.setItem("state", state)
 
     const params = new URLSearchParams();
-    params.append('state',process.env.REACT_APP_STATE || '');
+    params.append('state',state);
     params.append('client_id',process.env.REACT_APP_CLIENT_ID || '');
     params.append('redirect_uri',process.env.REACT_APP_REDIRECT_URI || '');
-    params.append('response_type',process.env.REACT_APP_RESPONSE_TYPE || '');
-    params.append('code_challenge',generateCodeChallenge(codeVerifier) || '');
+    params.append('response_type','code');
+    params.append('code_challenge',generateCodeChallenge(codeVerifier));
 
     window.location.assign(`${process.env.REACT_APP_SIGNIN_URI}?${params.toString()}`);
   }
