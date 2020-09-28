@@ -26,9 +26,6 @@ export default function FormEventDialog(props: FormEventDialogProps) {
     if (!date) {
       return;
     }
-    const _eventCreated = await createEvent({
-      date
-    });
     setDate(null);
     handleClose();
   }

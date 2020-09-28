@@ -9,21 +9,18 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 interface AlertDialogProps {
   title: string,
   message: string,
-  open: boolean
+  open: boolean,
+  onCancel: () => void
+  onAgree: () => void
 }
 
 export default function AlertDialog(props: AlertDialogProps) {
-  const [open, setOpen] = React.useState(props.open);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <div>
       <Dialog
-        open={open}
-        onClose={handleClose}
+        open={props.open}
+        onClose={props.onCancel}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -34,10 +31,10 @@ export default function AlertDialog(props: AlertDialogProps) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={props.onCancel} color="primary">
             Discordo
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={props.onAgree} color="primary" autoFocus>
             Concordo
           </Button>
         </DialogActions>
