@@ -17,7 +17,7 @@ export default function ShareMeetingDialog(props: ShareMeetingDialogProps) {
   }
 
   const title = "Deseja compartilhar o evento em suas redes sociais?";
-  const url = `${SELF_URL}/s/${supporter?.id}/${props.event?.id}/join`;
+  const url = `${SELF_URL}/s/${supporter?.id}/e/${props.event?.id}/join`;
   const shareText = "Vou conversar com meu candidato, venha participar!"
 
   return (
