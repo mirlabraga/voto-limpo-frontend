@@ -48,7 +48,7 @@ export default function ListTableEvents() {
   useEffect(()=>{
     switch (window.localStorage.pending_action) {
       case 'create_google_calendar':
-        const event = rows.find(event => event.id == window.localStorage.current_event);
+        const event = rows.find(event => event.id === window.localStorage.current_event);
         if (event) {
           window.localStorage.removeItem('pending_action');
           setCurrentEvent(event);

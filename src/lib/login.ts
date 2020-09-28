@@ -46,8 +46,8 @@ export const getSupporter = async () => {
  *   console.log('add-scope redirect url', generateAddScopeUrl(supporter.id, "https://www.googleapis.com/auth/contacts.readonly"))
  * })
  * </code>
- * @param supporterId 
- * @param scope 
+ * @param supporterId
+ * @param scope
  */
 export const generateAddScopeUrl = (supporterId: string, scope: string) => {
   const codeVerifier = uuid();
@@ -90,7 +90,7 @@ export const getToken = async(code: string, state: string) => {
 
 export const handleResponses = (history: History, request: Promise<Response>): Promise<Response> => {
   return request.then(result => {
-    if (result.status == 403 || result.status == 401) {
+    if (result.status === 403 || result.status === 401) {
       history.push('/login');
       throw new Error('unauthenticated user')
     };
