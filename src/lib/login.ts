@@ -3,6 +3,7 @@ import * as crypto from 'crypto';
 import base64url from "base64url";
 import { History } from 'history';
 import * as jwt from 'jsonwebtoken';
+import { useEffect, useState } from "react";
 
 const sha256 = (buffer: string) => {
 return crypto.createHash('sha256').update(buffer).digest();
@@ -27,7 +28,12 @@ export const generateLoginUrl = () => {
     return `${process.env.REACT_APP_SIGNIN_URI}?${params.toString()}`;
 }
 
-export const getSupporter = async () => {
+interface Supporter {
+  id: string,
+  name: string,
+  email: string
+}
+export const getSupporter = async (): Promise<Supporter> => {
   const claims = jwt.decode(window.localStorage.id_token);
   if (typeof(claims) === 'string' || claims === null) {
     throw new Error('invalid localStore.id_token');
@@ -37,6 +43,16 @@ export const getSupporter = async () => {
     name: claims['name'],
     email: claims['email'],
   }
+}
+
+export const useSupporter = ():Supporter | null => {
+  const [supporter, setSupporter] = useState<Supporter|null>(null);
+
+  useEffect(() => {
+    getSupporter().then(setSupporter);
+  }, []);
+
+  return supporter;
 }
 
 /**

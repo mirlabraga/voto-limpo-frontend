@@ -42,7 +42,7 @@ export default function GoogleCalendarDialog(props: GoogleCalendarDialogProps) {
   const title = "Use o teu Calendário do Google?";
   return (
     <div> {}
-      <AlertDialog title={title} open={props.open && !!props.event} onCancel={() => props.onClose()} onAgree={onAgree} >
+      <AlertDialog title={title} open={props.open && !!props.event} cancelText="Discordo" onCancel={() => props.onClose()} agreeText="Concordo" onAgree={onAgree} >
         {hasCalendarScope
           ? (
             <>

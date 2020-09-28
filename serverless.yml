@@ -14,6 +14,7 @@ custom:
         REACT_APP_SIGNIN_URI=${self:custom.secrets.SIGNIN_URI}
         REACT_APP_TOKEN_URI=${self:custom.secrets.TOKEN_URI}
         REACT_APP_CLIENT_ID=${self:custom.secrets.MAIN_CLIENT_ID}
+        REACT_APP_SELF_URL=https://${self:custom.appDomain}
         REACT_APP_REDIRECT_URI=https://${self:custom.appDomain}/callback
         REACT_APP_BASE_URL=${self:custom.secrets.BASE_URL}
         npm run build
@@ -22,7 +23,7 @@ plugins:
   - serverless-s3-sync
   - serverless-pseudo-parameters
   - serverless-plugin-scripts
-  
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -79,7 +80,7 @@ resources:
       Type: AWS::CloudFront::Distribution
       Properties:
         DistributionConfig:
-          Aliases: 
+          Aliases:
             - "${self:custom.appDomain}"
           Comment: CloudFront Distribution
           DefaultCacheBehavior:

@@ -6,7 +6,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Event, useEvents } from '../../../lib/events';
+import { Event } from '../../../lib/events';
 import moment from 'moment';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Link, Table } from '@material-ui/core';
@@ -14,6 +14,8 @@ import { useStylesTable } from './ListTableEvents.css';
 import ShareIcon from '@material-ui/icons/Share';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import GoogleCalendarDialog from './GoogleCalendarDialog'
+import ShareMeetingDialog from './ShareMeetingDialog';
+import ShareButtons from './ShareButtons';
 
 interface ListTableEventsProps {
   rows: Event[];
@@ -22,8 +24,9 @@ interface ListTableEventsProps {
 export default function ListTableEvents(props: ListTableEventsProps) {
   const classes = useStylesTable();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [windowOpen, setWindowOpen] = useState<boolean>(false);
+  const [windowShareOpen, setWindowShareOpen] = useState<boolean>(false);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const rows = props.rows;
 
@@ -45,8 +48,17 @@ export default function ListTableEvents(props: ListTableEventsProps) {
     setWindowOpen(true);
   }
 
+  const handleShareMeeting = (event: Event) => {
+    setCurrentEvent(event);
+    setWindowShareOpen(true);
+  }
+
   const handleClose = () => {
     setWindowOpen(false);
+  };
+
+  const handleShareClose = () => {
+    setWindowShareOpen(false);
   };
 
   useEffect(()=>{
@@ -80,12 +92,16 @@ export default function ListTableEvents(props: ListTableEventsProps) {
                 <TableCell component="th" scope="row">
                   {moment(row.date).format('HH:mm')}
                 </TableCell>
-                <TableCell component="th" scope="row">
-                    <Link  component="button" onClick={() => handleGoogleMeeting(row)}><SupervisedUserCircleIcon/></Link>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                    <Link  component="button" onClick={() => console.log("t")}><ShareIcon/></Link>
-                </TableCell>
+                {!row.googleCalendar?.id &&
+                  <TableCell component="th" scope="row">
+                      <Link  component="button" onClick={() => handleGoogleMeeting(row)}><SupervisedUserCircleIcon/></Link>
+                  </TableCell>
+                }
+                {row.googleCalendar?.id &&
+                  <TableCell component="th" scope="row">
+                      <Link  component="button" onClick={() => handleShareMeeting(row)}><ShareIcon/></Link>
+                  </TableCell>
+                }
               </TableRow>
             ))}
             {emptyRows > 0 && (
@@ -115,6 +131,7 @@ export default function ListTableEvents(props: ListTableEventsProps) {
         </Table>
       </TableContainer>
       <GoogleCalendarDialog event={currentEvent} open={windowOpen} onClose={handleClose}/>
+      <ShareMeetingDialog event={currentEvent} open={windowShareOpen} onClose={handleShareClose}/>
     </div>
   );
 }
