@@ -5,7 +5,7 @@ import Template from '../template/Template';
 export default function Dashboard() {
   return (
     <div>
-      <Template page = {<ListEvents/>}/>
+      <Template page = {<ListEvents />}/>
     </div>
   );
 }

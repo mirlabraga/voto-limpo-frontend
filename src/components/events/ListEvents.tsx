@@ -14,13 +14,14 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import { styles } from './ListEvents.css'
 import FormEventDialog from './FormEventDialog';
 import ListTableEvents from './ListTableEvents/ListTableEvents';
+import { useProfileScopes } from '../../lib/profile';
 
 export interface ListEventsProps extends WithStyles<typeof styles> {}
 
 function ListEvents(props: ListEventsProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState("");
-
+  const profileScopes = useProfileScopes();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -68,7 +69,7 @@ function ListEvents(props: ListEventsProps) {
           Nenhuma reunião criada para esse cadidato ainda.
         </Typography> */}
         <Typography color="textSecondary" align="center">
-          <ListTableEvents/>
+          <ListTableEvents profileScopes={profileScopes}/>
         </Typography>
       </div>
       <FormEventDialog selectedValue={selectedValue} open={open} onClose={handleClose} />

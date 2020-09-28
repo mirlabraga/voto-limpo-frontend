@@ -15,7 +15,11 @@ import ShareIcon from '@material-ui/icons/Share';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import GoogleCalendarDialog from './GoogleCalendarDialog'
 
-export default function ListTableEvents() {
+interface ListTableProps {
+  profileScopes: string[]
+}
+
+export default function ListTableEvents(props: ListTableProps) {
   const classes = useStylesTable();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
