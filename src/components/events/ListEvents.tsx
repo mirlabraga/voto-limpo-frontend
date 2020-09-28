@@ -13,6 +13,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { styles } from './ListEvents.css'
 import FormEventDialog from './FormEventDialog';
+import ListTableEvents from './ListTableEvents';
 
 export interface ListEventsProps extends WithStyles<typeof styles> {}
 
@@ -63,8 +64,11 @@ function ListEvents(props: ListEventsProps) {
         </Toolbar>
       </AppBar>
       <div className={classes.contentWrapper}>
-        <Typography color="textSecondary" align="center">
+        {/* <Typography color="textSecondary" align="center">
           Nenhuma reunião criada para esse cadidato ainda.
+        </Typography> */}
+        <Typography color="textSecondary" align="center">
+          <ListTableEvents/>
         </Typography>
       </div>
       <FormEventDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
