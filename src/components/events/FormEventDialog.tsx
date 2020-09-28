@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DateAndTimePickers from '../common/DateAndTimePickers';
-import { createEvent } from '../../lib/events';
+import { useCreateEvent } from '../../lib/events';
 
 export interface FormEventDialogProps {
   open: boolean;
@@ -17,17 +17,25 @@ export default function FormEventDialog(props: FormEventDialogProps) {
   const [date, setDate] = React.useState<Date | null | undefined> (
     new Date(),
   );
-
+  const [createEvent, loadingCreateEvent] = useCreateEvent();
   const handleClose = () => {
     onClose(selectedValue);
   };
+
+  useEffect(() => {
+    if (loadingCreateEvent) {
+      setDate(null);
+      handleClose();
+    }
+  }, [loadingCreateEvent]);
 
   const handleCreateEvent = async () => {
     if (!date) {
       return;
     }
-    setDate(null);
-    handleClose();
+    createEvent({
+      date
+    })
   }
 
   return (

@@ -4,7 +4,7 @@ import { handleResponses } from "./login";
 
 
 export const useProfileScopes = (): string[] => {
-    const [events, setEvents] = useState<string[]>([]);
+    const [scopes, setScopes] = useState<string[]>([]);
     const history = useHistory();
 
     const fetchEvents = async() => {
@@ -17,12 +17,20 @@ export const useProfileScopes = (): string[] => {
             },
             mode: 'cors',
         }));
-        setEvents(await result.json() as string[]);
+        if (!result.ok) {
+          throw new Error(`Couldn't load scopes. ${result.status}  - ${await result.text()}`)
+        }
+        const body = await result.json();
+        if (Array.isArray(body)) {
+          setScopes(body as string[]);
+        } else {
+          throw new Error(`Couldn't load scopes. ${body}`)
+        }
     }
 
     useEffect(() => {
         fetchEvents().catch(console.log);
     }, [])
-    
-    return events;
+
+    return scopes;
 }

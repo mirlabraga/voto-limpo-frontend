@@ -8,10 +8,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 interface AlertDialogProps {
   title: string,
-  message: string,
+  message?: string,
   open: boolean,
   onCancel: () => void
-  onAgree: () => void
+  onAgree: () => void,
+  children?: React.ReactNode
 }
 
 export default function AlertDialog(props: AlertDialogProps) {
@@ -28,13 +29,14 @@ export default function AlertDialog(props: AlertDialogProps) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             {props.message}
+            {props.children}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.onCancel} color="primary">
+          <Button onClick={props.onCancel} color="secondary">
             Discordo
           </Button>
-          <Button onClick={props.onAgree} color="primary" autoFocus>
+          <Button onClick={props.onAgree} variant="contained" color="primary" autoFocus>
             Concordo
           </Button>
         </DialogActions>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -6,7 +6,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { useEvents } from '../../../lib/events';
+import { Event, useEvents } from '../../../lib/events';
 import moment from 'moment';
 import TablePaginationActions from '@material-ui/core/TablePagination/TablePaginationActions';
 import { Link, Table } from '@material-ui/core';
@@ -15,16 +15,12 @@ import ShareIcon from '@material-ui/icons/Share';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import GoogleCalendarDialog from './GoogleCalendarDialog'
 
-interface ListTableProps {
-  profileScopes: string[]
-}
-
-export default function ListTableEvents(props: ListTableProps) {
+export default function ListTableEvents() {
   const classes = useStylesTable();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [windowOpen, setWindowOpen] = useState<boolean>(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const rows = useEvents();
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -40,13 +36,29 @@ export default function ListTableEvents(props: ListTableProps) {
     setPage(0);
   };
 
-  const handleGoogleMeeting = () => {
+  const handleGoogleMeeting = (event: Event) => {
+    setCurrentEvent(event);
     setWindowOpen(true);
   }
 
   const handleClose = () => {
     setWindowOpen(false);
   };
+
+  useEffect(()=>{
+    switch (window.localStorage.pending_action) {
+      case 'create_google_calendar':
+        const event = rows.find(event => event.id == window.localStorage.current_event);
+        if (event) {
+          window.localStorage.removeItem('pending_action');
+          setCurrentEvent(event);
+          setWindowOpen(true);
+        }
+        break;
+      default:
+        break;
+    }
+  }, [rows]);
 
   return (
     <div>
@@ -65,7 +77,7 @@ export default function ListTableEvents(props: ListTableProps) {
                   {moment(row.date).format('HH:mm')}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    <Link  component="button" onClick={handleGoogleMeeting}><SupervisedUserCircleIcon/></Link>
+                    <Link  component="button" onClick={() => handleGoogleMeeting(row)}><SupervisedUserCircleIcon/></Link>
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Link  component="button" onClick={() => console.log("t")}><ShareIcon/></Link>
@@ -98,7 +110,7 @@ export default function ListTableEvents(props: ListTableProps) {
           </TableFooter>
         </Table>
       </TableContainer>
-      <GoogleCalendarDialog selectedValue={selectedValue} open={windowOpen} onClose={handleClose}/>
+      <GoogleCalendarDialog event={currentEvent} open={windowOpen} onClose={handleClose}/>
     </div>
   );
 }

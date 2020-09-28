@@ -10,8 +10,6 @@ interface DateAndTimePickersProps {
 }
 
 export default function DateAndTimePickers(props: DateAndTimePickersProps) {
-  console.log('[DateAndTimePickers] date:', props.date);
-
   const handleDateChange = (date: MaterialUiPickersDate) => {
     props.setDate(date?.toDate());
   }

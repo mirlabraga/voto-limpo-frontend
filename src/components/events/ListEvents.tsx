@@ -21,7 +21,6 @@ export interface ListEventsProps extends WithStyles<typeof styles> {}
 function ListEvents(props: ListEventsProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState("");
-  const profileScopes = useProfileScopes();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -68,7 +67,7 @@ function ListEvents(props: ListEventsProps) {
         {/* <Typography color="textSecondary" align="center">
           Nenhuma reunião criada para esse cadidato ainda.
         </Typography> */}
-        <ListTableEvents profileScopes={profileScopes}/>
+        <ListTableEvents/>
       </div>
       <FormEventDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
     </Paper>

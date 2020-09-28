@@ -32,12 +32,12 @@ export const useEvents = (): Event[] => {
     useEffect(() => {
         fetchEvents().catch(console.log);
     }, [])
-    
+
     return events;
 }
 
-export const useCreateEvent = (): [(event: Event | null) => void, boolean] => {
-    const [event, setEvent] = useState<Event | null>();
+export const useCreateEvent = (): [(event: CreateEventData | null) => void, boolean] => {
+    const [event, setEvent] = useState<CreateEventData | null>();
     const [loading, setLoading] = useState<boolean>(false);
     const history = useHistory();
 
@@ -45,10 +45,11 @@ export const useCreateEvent = (): [(event: Event | null) => void, boolean] => {
         if (!event) {
             return;
         }
+        setLoading(true);
         const url = `${process.env.REACT_APP_BASE_URL}/events`;
         const result = await handleResponses(history, fetch(url, {
             method: 'POST',
-            body: JSON.stringify(event),
+            body: JSON.stringify({ date: event.date?.toISOString() }),
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${window.localStorage.getItem("id_token")}`
@@ -66,19 +67,33 @@ export const useCreateEvent = (): [(event: Event | null) => void, boolean] => {
     return [setEvent, loading];
 }
 
-export const createEvent = async (event: CreateEventData): Promise<Event> => {
-    const uri = `${process.env.REACT_APP_BASE_URL}/events`;
-    const response = await fetch(uri, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${window.localStorage.getItem("id_token")}`
-        },
-        mode: 'cors',
-        body: JSON.stringify({ date: event.date?.toISOString() })
-    });
-    if (!response.ok) {
-        throw new Error(`Couldn't create event. Status code: ${response.status}. Text: ${await response.text()}`);
-    }
-    return await response.json() as Event;
+export const useCreateGoogleCalendar = (): [(event: Event | null) => void, boolean] => {
+  const [event, setEvent] = useState<Event | null>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const history = useHistory();
+
+  const createGoogleCalendar = async() => {
+      if (!event) {
+          return;
+      }
+      setLoading(true);
+      const url = `${process.env.REACT_APP_BASE_URL}/events/${event.id}/google-meeting`;
+      await handleResponses(history, fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(event),
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${window.localStorage.getItem("id_token")}`
+          },
+          mode: 'cors',
+      }));
+      setEvent(null);
+      setLoading(false);
+  }
+
+  useEffect(() => {
+      createGoogleCalendar().catch(console.log);
+  }, [event])
+
+  return [setEvent, loading];
 }
