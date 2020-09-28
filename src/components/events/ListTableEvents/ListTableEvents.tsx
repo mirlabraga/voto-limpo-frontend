@@ -15,13 +15,17 @@ import ShareIcon from '@material-ui/icons/Share';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import GoogleCalendarDialog from './GoogleCalendarDialog'
 
-export default function ListTableEvents() {
+interface ListTableEventsProps {
+  rows: Event[];
+}
+
+export default function ListTableEvents(props: ListTableEventsProps) {
   const classes = useStylesTable();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [windowOpen, setWindowOpen] = useState<boolean>(false);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
-  const rows = useEvents();
+  const rows = props.rows;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 

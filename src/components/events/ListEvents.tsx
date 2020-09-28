@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -13,12 +13,15 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import { styles } from './ListEvents.css'
 import FormEventDialog from './FormEventDialog';
 import ListTableEvents from './ListTableEvents/ListTableEvents';
+import { useEvents } from '../../lib/events';
+import { Typography } from '@material-ui/core';
 
-export interface ListEventsProps extends WithStyles<typeof styles> {}
+export interface ListEventsProps extends WithStyles<typeof styles> { }
 
 function ListEvents(props: ListEventsProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState("");
+  const [rows, loadEvents] = useEvents();
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -26,7 +29,12 @@ function ListEvents(props: ListEventsProps) {
   const handleClose = (value: string) => {
     setOpen(false);
     setSelectedValue(value);
+    loadEvents(true);
   };
+
+  useEffect(() => {
+    loadEvents(true);
+  }, [])
 
   const { classes } = props;
 
@@ -54,7 +62,7 @@ function ListEvents(props: ListEventsProps) {
               </Button>
               <Tooltip title="Reload">
                 <IconButton>
-                  <RefreshIcon className={classes.block} color="inherit" />
+                  <RefreshIcon className={classes.block} color="inherit" onClick={() => loadEvents(true)} />
                 </IconButton>
               </Tooltip>
             </Grid>
@@ -62,10 +70,17 @@ function ListEvents(props: ListEventsProps) {
         </Toolbar>
       </AppBar>
       <div className={classes.contentWrapper}>
-        {/* <Typography color="textSecondary" align="center">
-          Nenhuma reunião criada para esse cadidato ainda.
-        </Typography> */}
-        <ListTableEvents/>
+        {(rows.length > 0) ?
+            <>
+              <ListTableEvents rows={rows} />
+            </>
+            :
+            <>
+            <Typography color="textSecondary" align="center">
+              Nenhuma reunião criada para esse cadidato ainda.
+            </Typography>
+            </>
+          }
       </div>
       <FormEventDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
     </Paper>

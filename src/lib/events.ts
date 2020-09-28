@@ -12,9 +12,10 @@ export interface Event {
     date: string,
 }
 
-export const useEvents = (): Event[] => {
+export const useEvents = (): [Event[], (_loadEvents: boolean) => void] => {
     const [events, setEvents] = useState<Event[]>([]);
     const history = useHistory();
+    const [loadEvents, setLoadEvent] = useState<boolean>(false);
 
     const fetchEvents = async() => {
         const url = `${process.env.REACT_APP_BASE_URL}/events`;
@@ -26,14 +27,18 @@ export const useEvents = (): Event[] => {
             },
             mode: 'cors',
         }));
+        setLoadEvent(false);
         setEvents(await result.json() as Event[]);
     }
 
     useEffect(() => {
+      console.log('useEvents detext a change in loadEvents', loadEvents);
+      if (loadEvents){
         fetchEvents().catch(console.log);
-    }, [])
+      }
+    }, [loadEvents])
 
-    return events;
+    return [events, setLoadEvent ];
 }
 
 export const useCreateEvent = (): [(event: CreateEventData | null) => void, boolean] => {

@@ -14,7 +14,6 @@ interface GoogleCalendarDialogProps {
 }
 
 export default function GoogleCalendarDialog(props: GoogleCalendarDialogProps) {
-  console.log('GoogleCalendarDialog', props.event);
 
   const profileScopes = useProfileScopes();
   const hasCalendarScope = !!profileScopes?.find(scope => scope === GOOGLE_CALENDAR_SCOPE);
