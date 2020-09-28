@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from "react";
-import { Redirect, RouteComponentProps } from "react-router";
+import { RouteComponentProps } from "react-router";
 import { getToken } from "../../lib/login";
 
 const LoginCallback: FC<RouteComponentProps> = ({ history, location }) => {

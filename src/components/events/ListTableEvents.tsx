@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,7 +14,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import { useStyles, useStylesTable } from './ListTableEvents.css';
-import { fetchEvent, Event } from '../libs/Events';
+import { fetchEvents, Event } from '../../lib/events';
+
 import moment from 'moment';
 
 interface TablePaginationActionsProps {
@@ -75,14 +76,22 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   );
 }
 
-const rows: Event[] = fetchEvent();
 
 export default function ListTableEvents() {
   const classes = useStylesTable();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setRows] = React.useState<Event[]>([]);
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  useEffect(() => {
+    fetchEvents()
+    .then(events => {
+      setRows(events);
+    });
+    console.log('use effect did not work');
+  }, [rowsPerPage])
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
