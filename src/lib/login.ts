@@ -28,7 +28,7 @@ export const generateLoginUrl = () => {
     return `${process.env.REACT_APP_SIGNIN_URI}?${params.toString()}`;
 }
 
-interface Supporter {
+export interface Supporter {
   id: string,
   name: string,
   email: string
